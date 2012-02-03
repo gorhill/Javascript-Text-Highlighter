@@ -2,8 +2,12 @@
 // Version: 2011-01-17
 // Title: HTML text hilighter
 // Permalink: http://www.raymondhill.net/blog/?p=272
-// Purpose: Highlight portions of text inside a specified element, according to a search expression.
+// Purpose: Hilight portions of text inside a specified element, according to a search expression.
 // Key feature: Can safely hilight text across HTML tags.
+// History:
+//   2012-01-29
+//     fixed a bug which caused special regex characters in the
+//     search string to break the highlighter
 
 function doHighlight(node,className,searchFor,which){
 	var doc = document;
@@ -17,7 +21,9 @@ function doHighlight(node,className,searchFor,which){
 	// - single string
 	// - single regex (optionally, a 'which' argument, default to 0)
 	if (typeof searchFor === 'string') {
-		searchFor = new RegExp(searchFor,'ig');
+		// rhill 2012-01-29: escape regex chars first
+		// http://stackoverflow.com/questions/280793/case-insensitive-string-replacement-in-javascript
+		searchFor = new RegExp(searchFor.replace(/[.*+?|()\[\]{}\\$^]/g,'\\$&'),'ig');
 		}
 	which = which || 0;
 
